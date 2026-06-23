@@ -1,0 +1,419 @@
+﻿FORMAT: 1A
+HOST: https://www.spotternetwork.org/
+
+# Spotter Network
+SpotterNetwork.org is a Not For Profit Organization dedicated to connecting chasers and severe weather enthusiasts. This API serves as a mechanism to share spotters' locations and reports for improved communication within the community.
+
+# Group Authenticate Spotter
+Validate a spotter so that your application can perform other calls to the API.
+
+## Log In [/login]
+### Retrieve Spotter ID [POST]
++ Request (application/json)
+
+        {
+            "username": "xxxxx",
+            "password": "xxxxx"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "success":true,
+            "id": "APPLICATION-ID",
+            "marker": "PUBLIC-ID",
+            "CanReport": true
+        }
+
++ Response 401 (application/json)
+
+        {
+          "success": false,
+          "errors": [
+            "The username or password you entered was incorrect."
+          ]
+        }
+        
++ Response 403 (application/json)
+
+        {
+          "success": false,
+          "errors": [
+            "You have been banned. Reason: Abuser"
+          ],
+          "id": "APPLICATION-ID",
+          "CanReport": false
+        }
+
+# Group Spotter Positions
+Update a spotter's position or retrieve all spotters' positions that have updated within the last 180 minutes.
+
+## Update Position [/positions/update]
+### Update Spotter Position [POST]
++ Request (application/json)
+
+        {
+            "id": "APPLICATION-ID",
+            "report_at": "YYYY-MM-DD HH:MM:SS",
+            "lat": 39.7553101,
+            "lon": -105.2330093,
+            "elev": 0,
+            "mph": 7.5,
+            "dir": 328,
+            "active": 1,
+            "gps": 1
+        }
+
++ Response 200 (application/json)
+
+        {
+            "success":true
+        }
+
+## Get Positions [/positions]
+### Get Spotters' Positions [POST]
++ Request Spotters' Positions (application/json)
+
+        {
+            "id": "APPLICATION-ID"
+        }
+
++ Response 200 (application/json)
+
+        {
+          "positions": [
+            {
+              "report_at": "2015-01-21 21:00:08",
+              "lat": "38.9080658",
+              "lon": "-77.0030365",
+              "elev": "0",
+              "dir": "0",
+              "gps": "0",
+              "callsign": "WX2DX",
+              "email": "",
+              "phone": "",
+              "ham": "WX2DX",
+              "ham_show": "0",
+              "freq": "",
+              "note": "",
+              "im": "",
+              "twitter": null,
+              "web": "",
+              "unix": "1421874008",
+              "first": "William",
+              "last": "Smith",
+              "marker": "36181"
+            },
+            {
+              "report_at": "2015-01-21 11:45:12",
+              "lat": "39.2716141",
+              "lon": "-76.6192093",
+              "elev": "0",
+              "dir": "0",
+              "gps": "0",
+              "callsign": "rldovejr",
+              "email": null,
+              "phone": null,
+              "ham": null,
+              "ham_show": null,
+              "freq": null,
+              "note": null,
+              "im": null,
+              "twitter": null,
+              "web": null,
+              "unix": "1421840712",
+              "first": "Ron",
+              "last": "Dove",
+              "marker": "13573"
+            }
+        }
+
++ Request Specific Spotters' Positions (application/json)
+
+        {
+            "id": "APPLICATION-ID",
+            "markers": [
+                36181,
+                13573
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+          "positions": [
+            {
+              "report_at": "2015-01-21 21:00:08",
+              "lat": "38.9080658",
+              "lon": "-77.0030365",
+              "elev": "0",
+              "dir": "0",
+              "gps": "0",
+              "callsign": "WX2DX",
+              "email": "",
+              "phone": "",
+              "ham": "WX2DX",
+              "ham_show": "0",
+              "freq": "",
+              "note": "",
+              "im": "",
+              "twitter": null,
+              "web": "",
+              "unix": "1421874008",
+              "first": "William",
+              "last": "Smith",
+              "marker": "36181"
+            },
+            {
+              "report_at": "2015-01-21 11:45:12",
+              "lat": "39.2716141",
+              "lon": "-76.6192093",
+              "elev": "0",
+              "dir": "0",
+              "gps": "0",
+              "callsign": "rldovejr",
+              "email": null,
+              "phone": null,
+              "ham": null,
+              "ham_show": null,
+              "freq": null,
+              "note": null,
+              "im": null,
+              "twitter": null,
+              "web": null,
+              "unix": "1421840712",
+              "first": "Ron",
+              "last": "Dove",
+              "marker": "13573"
+            }
+        }
+
+# Group Weather Reports
+Submit a Severe Weather Report or retrieve all spotters' reports within the last 180 minutes.
+
+## Submit Severe Report [/report/severe]
+### Create Severe Report [POST]
++ Request (application/json)
+
+        {
+           "id": "APPLICATION-ID", // Spotter ID
+           "report_type": "S", // S = severe, W = winter
+           "stamp": "YYYY-MM-DD HH:MM:SS",
+           "tornado": 0, // boolean, 0 = no, 1 = yes
+           "funnelcloud": 0, // boolean, 0 = no, 1 = yes
+           "wallcloud": 0, // boolean, 0 = no, 1 = yes
+           "rotation": 0, // boolean, 0 = no, 1 = yes
+           "hail": 0, // boolean, 0 = no, 1 = yes
+           "wind": 0, // boolean, 0 = no, 1 = yes
+           "flood": 0, // boolean, 0 = no, 1 = yes
+           "flashflood": 0, // boolean, 0 = no, 1 = yes
+           "other": 1, // boolean, 0 = no, 1 = yes
+           "hailsize": 0, // inches
+           "windspeed": 0, // miles per hour
+           "windmeasure": 0, // 0 = estimated, 1 = exact
+           "stamp_exact": 0, // boolean, 0 = no, 1 = yes
+           "damage": 0, // boolean, 0 = no, 1 = yes
+           "injury": 0, // boolean, 0 = no, 1 = yes
+           "narrative": "test test test", // short narrative
+           "lat": 39.763819, // latitude
+           "lon": -105.2217393, // longitude
+           "gps": 1, // boolean, 0 = no, 1 = yes
+           "nwschat": 1, // submit to NWSChat
+           "twitter": 1 // submit to Twitter (@SpotterNetwork)
+        }
+
+
++ Response 200 (application/json)
+
+        {
+        }
+
+## Get All Spotters' Reports [/reports]
+### Get Recent Spotter Reports [POST]
++ Request (application/json)
+        
+        {
+            "id": "SPOTTER-ID"
+        }
+
++ Response 200 (application/json)
+
+        {
+          "reports": [
+            {
+              "first": "Korin",
+              "last": "Lee",
+              "email": "Lee_korin@hotmail.com",
+              "report": "18271",
+              "report_type": "W",
+              "insert_time": "2015-01-21 22:27:11",
+              "stamp": "2015-01-21 22:25:00",
+              "stamp_exact": "0",
+              "lat": "38.082200000000000",
+              "lon": "-102.611500000000000",
+              "gps": "1",
+              "cwa": "PUB",
+              "state": "CO",
+              "city1": "0 miles ENE of LAMAR, CO",
+              "city2": "8 miles SE of WILEY, CO",
+              "city3": "13 miles E of MCCLAVE, CO",
+              "tornado": "0",
+              "funnelcloud": "0",
+              "wallcloud": "0",
+              "rotation": "0",
+              "hail": "0",
+              "wind": "0",
+              "flood": "0",
+              "flashflood": "0",
+              "other": "0",
+              "hailsize": "0",
+              "windspeed": "0",
+              "windmeasure": "0",
+              "damage": "0",
+              "injury": "0",
+              "narrative": "",
+              "snow": "1",
+              "sleet": "0",
+              "FreezingRain": "0",
+              "temp": "31",
+              "newsnowfall_w": "1",
+              "newsnowfall_f": "0",
+              "newsnowfall_past_hr": "0",
+              "totalsnowfall_w": "1",
+              "totalsnowfall_f": "0",
+              "snow_depth": "1",
+              "blowing": "0",
+              "drifting": "0",
+              "depth": "0",
+              "distance": "0",
+              "newice_w": "0",
+              "newice_f": "0",
+              "newice_past_hr": "0",
+              "totalice_w": "0",
+              "totalice_f": "0",
+              "icy": "0",
+              "slushy": "0",
+              "snow_covered": "0",
+              "power": "0",
+              "trees": "0",
+              "unix": "1421879100"
+            },
+            {
+              "first": "Jason",
+              "last": "Donagher-Zett",
+              "email": "Jmdzett@gmail.com",
+              "report": "18270",
+              "report_type": "S",
+              "insert_time": "2015-01-21 21:27:15",
+              "stamp": "2015-01-21 21:25:00",
+              "stamp_exact": "0",
+              "lat": "40.015000000000000",
+              "lon": "-105.247000000000000",
+              "gps": "1",
+              "cwa": "BOU",
+              "state": "CO",
+              "city1": "1 miles SSE of BOULDER, CO",
+              "city2": "5 miles N of MARSHALL, CO",
+              "city3": "5 miles SW of GUNBARREL, CO",
+              "tornado": "0",
+              "funnelcloud": "0",
+              "wallcloud": "0",
+              "rotation": "0",
+              "hail": "0",
+              "wind": "0",
+              "flood": "0",
+              "flashflood": "0",
+              "other": "1",
+              "hailsize": "0",
+              "windspeed": "0",
+              "windmeasure": "2",
+              "damage": "0",
+              "injury": "0",
+              "narrative": "Heavy snow fall inside of Boulder, CO city limits, visibility ranging from less the 1/2 mile to less than a 1/4 mile, roadways snow covered and slick.",
+              "snow": "0",
+              "sleet": "0",
+              "FreezingRain": "0",
+              "temp": "0",
+              "newsnowfall_w": "0",
+              "newsnowfall_f": "0",
+              "newsnowfall_past_hr": "0",
+              "totalsnowfall_w": "0",
+              "totalsnowfall_f": "0",
+              "snow_depth": "0",
+              "blowing": "0",
+              "drifting": "0",
+              "depth": "0",
+              "distance": "0",
+              "newice_w": "0",
+              "newice_f": "0",
+              "newice_past_hr": "0",
+              "totalice_w": "0",
+              "totalice_f": "0",
+              "icy": "0",
+              "slushy": "0",
+              "snow_covered": "0",
+              "power": "0",
+              "trees": "0",
+              "unix": "1421875500"
+            },
+            {
+              "first": "Peter",
+              "last": "Nicholos",
+              "email": "k3psn@yahoo.com",
+              "report": "18269",
+              "report_type": "W",
+              "insert_time": "2015-01-21 15:10:11",
+              "stamp": "2015-01-21 15:05:00",
+              "stamp_exact": "0",
+              "lat": "41.149000000000000",
+              "lon": "-87.934300000000000",
+              "gps": "1",
+              "cwa": "LOT",
+              "state": "IL",
+              "city1": "3 miles WSW of BOURBONNAIS, IL",
+              "city2": "4 miles W of BRADLEY, IL",
+              "city3": "4 miles NW of KANKAKEE, IL",
+              "tornado": "0",
+              "funnelcloud": "0",
+              "wallcloud": "0",
+              "rotation": "0",
+              "hail": "0",
+              "wind": "0",
+              "flood": "0",
+              "flashflood": "0",
+              "other": "0",
+              "hailsize": "0",
+              "windspeed": "0",
+              "windmeasure": "0",
+              "damage": "0",
+              "injury": "0",
+              "narrative": "Snow total of 1.2\" in 1.5 hours.  Snow has tapered off.",
+              "snow": "1",
+              "sleet": "0",
+              "FreezingRain": "0",
+              "temp": "32",
+              "newsnowfall_w": "1",
+              "newsnowfall_f": "20",
+              "newsnowfall_past_hr": "2",
+              "totalsnowfall_w": "1",
+              "totalsnowfall_f": "20",
+              "snow_depth": "1",
+              "blowing": "0",
+              "drifting": "0",
+              "depth": "0",
+              "distance": "0",
+              "newice_w": "0",
+              "newice_f": "0",
+              "newice_past_hr": "0",
+              "totalice_w": "0",
+              "totalice_f": "0",
+              "icy": "0",
+              "slushy": "1",
+              "snow_covered": "1",
+              "power": "0",
+              "trees": "0",
+              "unix": "1421852700"
+            }
+          ]
+        }
+
