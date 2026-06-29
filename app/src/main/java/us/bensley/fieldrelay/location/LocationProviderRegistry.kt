@@ -7,6 +7,7 @@ enum class LocationProviderId(
     val shortName: String,
 ) {
     SPOTTER_NETWORK("Spotter Network", "SN"),
+    OVERLAND("Overland", "OVR"),
     APRS("APRS", "APRS"),
 }
 
@@ -21,6 +22,11 @@ object LocationProviderRegistry {
             id = LocationProviderId.SPOTTER_NETWORK,
             configured = settings.spotterNetworkEnabled &&
                 settings.appId.isNotBlank(),
+        ),
+        LocationProviderStatus(
+            id = LocationProviderId.OVERLAND,
+            configured = settings.overlandEnabled &&
+                settings.overlandEndpoint.isNotBlank(),
         ),
         LocationProviderStatus(
             id = LocationProviderId.APRS,
