@@ -11,6 +11,8 @@ import retrofit2.Retrofit
 import us.bensley.fieldrelay.data.api.SpotterNetworkApi
 import us.bensley.fieldrelay.location.AprsIsClient
 import us.bensley.fieldrelay.location.AprsIsPositionProvider
+import us.bensley.fieldrelay.location.OverlandClient
+import us.bensley.fieldrelay.location.OverlandPositionProvider
 import us.bensley.fieldrelay.location.PositionReportingCoordinator
 import us.bensley.fieldrelay.location.SpotterNetworkPositionProvider
 import java.util.concurrent.TimeUnit
@@ -63,6 +65,7 @@ object ServiceLocator {
         PositionReportingCoordinator(
             providers = listOf(
                 SpotterNetworkPositionProvider(api),
+                OverlandPositionProvider(OverlandClient(okHttpClient, json)),
                 AprsIsPositionProvider(AprsIsClient()),
             ),
         )

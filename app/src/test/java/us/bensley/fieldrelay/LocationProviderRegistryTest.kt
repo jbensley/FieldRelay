@@ -40,6 +40,30 @@ class LocationProviderRegistryTest {
     }
 
     @Test
+    fun enablesOverlandWhenToggledAndEndpointExists() {
+        val settings = Settings.DEFAULT.copy(
+            overlandEnabled = true,
+            overlandEndpoint = "https://example.com/overland",
+        )
+
+        assertTrue(LocationProviderRegistry.hasEnabledProvider(settings))
+        assertEquals(
+            setOf(LocationProviderId.OVERLAND),
+            LocationProviderRegistry.enabledProviderIds(settings),
+        )
+    }
+
+    @Test
+    fun ignoresOverlandEndpointWhenToggleIsOff() {
+        val settings = Settings.DEFAULT.copy(
+            overlandEnabled = false,
+            overlandEndpoint = "https://example.com/overland",
+        )
+
+        assertFalse(LocationProviderRegistry.hasEnabledProvider(settings))
+    }
+
+    @Test
     fun enablesAprsWhenToggleAndCredentialsAreConfigured() {
         val settings = Settings.DEFAULT.copy(
             aprsEnabled = true,
