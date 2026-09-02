@@ -117,4 +117,4 @@ These documents may contain implementation notes and historical context, but thi
 
 ## AI Usage Disclaimer
 
-This project may use AI-assisted tools during development, including for code, documentation, tests, and reviews. All AI-assisted contributions are subject to human review and testing, and the project maintainers remain responsible for the content and behavior of the software.
+This project may use AI-assisted tools during development, including for code, documentation, tests, and reviews. AI-generated or AI-assisted content may contain errors or omissions and should be independently reviewed before use. This disclosure does not modify the warranty or liability terms of the GNU General Public License v3.0.
