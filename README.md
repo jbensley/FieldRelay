@@ -114,3 +114,7 @@ Additional planning and research documents:
 - `docs/SIDELOAD_TEST_PLAN.md`
 
 These documents may contain implementation notes and historical context, but this README is the human-facing project overview.
+
+## AI Usage Disclaimer
+
+This project may use AI-assisted tools during development, including for code, documentation, tests, and reviews. AI-generated or AI-assisted content may contain errors or omissions and should be independently reviewed before use. This disclosure does not modify the warranty or liability terms of the GNU General Public License v3.0.
