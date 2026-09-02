@@ -114,3 +114,7 @@ Additional planning and research documents:
 - `docs/SIDELOAD_TEST_PLAN.md`
 
 These documents may contain implementation notes and historical context, but this README is the human-facing project overview.
+
+## AI Usage Disclaimer
+
+This project may use AI-assisted tools during development, including for code, documentation, tests, and reviews. All AI-assisted contributions are subject to human review and testing, and the project maintainers remain responsible for the content and behavior of the software.
