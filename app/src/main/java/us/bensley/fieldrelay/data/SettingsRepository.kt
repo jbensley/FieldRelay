@@ -55,6 +55,10 @@ enum class AprsToneMode {
 data class Settings(
     val appId: String,
     val spotterNetworkEnabled: Boolean,
+    val overlandEnabled: Boolean,
+    val overlandEndpoint: String,
+    val overlandToken: String,
+    val overlandDeviceId: String,
     val aprsEnabled: Boolean,
     val aprsCallsign: String,
     val aprsPasscode: String,
@@ -82,6 +86,10 @@ data class Settings(
         val DEFAULT = Settings(
             appId = "",
             spotterNetworkEnabled = false,
+            overlandEnabled = false,
+            overlandEndpoint = "",
+            overlandToken = "",
+            overlandDeviceId = "FieldRelay Android",
             aprsEnabled = false,
             aprsCallsign = "",
             aprsPasscode = "",
@@ -114,6 +122,10 @@ class SettingsRepository(context: Context) {
     private object Keys {
         val APP_ID = stringPreferencesKey("app_id")
         val SPOTTER_NETWORK_ENABLED = booleanPreferencesKey("spotter_network_enabled")
+        val OVERLAND_ENABLED = booleanPreferencesKey("overland_enabled")
+        val OVERLAND_ENDPOINT = stringPreferencesKey("overland_endpoint")
+        val OVERLAND_TOKEN = stringPreferencesKey("overland_token")
+        val OVERLAND_DEVICE_ID = stringPreferencesKey("overland_device_id")
         val APRS_ENABLED = booleanPreferencesKey("aprs_enabled")
         val APRS_CALLSIGN = stringPreferencesKey("aprs_callsign")
         val APRS_PASSCODE = stringPreferencesKey("aprs_passcode")
@@ -159,6 +171,10 @@ class SettingsRepository(context: Context) {
         Settings(
             appId = p[Keys.APP_ID] ?: "",
             spotterNetworkEnabled = p[Keys.SPOTTER_NETWORK_ENABLED] ?: false,
+            overlandEnabled = p[Keys.OVERLAND_ENABLED] ?: false,
+            overlandEndpoint = p[Keys.OVERLAND_ENDPOINT] ?: "",
+            overlandToken = p[Keys.OVERLAND_TOKEN] ?: "",
+            overlandDeviceId = p[Keys.OVERLAND_DEVICE_ID] ?: "FieldRelay Android",
             aprsEnabled = p[Keys.APRS_ENABLED] ?: false,
             aprsCallsign = p[Keys.APRS_CALLSIGN] ?: "",
             aprsPasscode = p[Keys.APRS_PASSCODE] ?: "",
@@ -190,6 +206,18 @@ class SettingsRepository(context: Context) {
 
     suspend fun setSpotterNetworkEnabled(value: Boolean) {
         dataStore.edit { it[Keys.SPOTTER_NETWORK_ENABLED] = value }
+    }
+
+    suspend fun setOverlandEnabled(value: Boolean) {
+        dataStore.edit { it[Keys.OVERLAND_ENABLED] = value }
+    }
+
+    suspend fun setOverlandSettings(endpoint: String, token: String, deviceId: String) {
+        dataStore.edit {
+            it[Keys.OVERLAND_ENDPOINT] = endpoint
+            it[Keys.OVERLAND_TOKEN] = token
+            it[Keys.OVERLAND_DEVICE_ID] = deviceId
+        }
     }
 
     suspend fun setAprsEnabled(value: Boolean) {

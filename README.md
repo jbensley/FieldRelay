@@ -1,6 +1,6 @@
 # FieldRelay Android
 
-FieldRelay is an Android app for field location beaconing and structured weather reporting. It is currently focused on storm spotter workflows, with support for Spotter Network and APRS-IS position reporting.
+FieldRelay is an Android app for field location beaconing and structured weather reporting. It is currently focused on storm spotter workflows, with support for Spotter Network, Overland, and APRS-IS position reporting.
 
 The app is intentionally bare-bones: configure the services you want to use, start a beacon, and keep useful location/status information visible in the app and home-screen widget.
 
@@ -10,6 +10,7 @@ FieldRelay is in active local development and has working debug builds. It has b
 
 - Spotter Network position reporting is implemented.
 - Spotter Network severe weather report submission is implemented with structured fields.
+- Overland position reporting is implemented.
 - APRS-IS position transmission is implemented.
 - APRS-IS accepts an explicitly configured callsign and passcode pair.
 - APRS packets have been observed on aprs.fi after beaconing.
@@ -34,6 +35,7 @@ FieldRelay uses a foreground location service to send GPS fixes to enabled provi
 Supported position providers:
 
 - Spotter Network
+- Overland
 - APRS-IS
 
 The beacon can run for a selected duration or indefinitely. The app also supports an "Ask me each time" default so a duration can be chosen when starting the beacon.
@@ -49,6 +51,15 @@ Spotter Network support includes:
 - Structured severe weather reports through `POST /report/severe`
 
 The Application ID is treated as a secret in the UI and is not displayed in plain text once saved.
+
+### Overland
+
+Overland support includes:
+
+- Endpoint URL configuration
+- Optional bearer-token authentication
+- Device ID configuration
+- GeoJSON Feature payloads compatible with Overland receivers
 
 ### APRS-IS
 

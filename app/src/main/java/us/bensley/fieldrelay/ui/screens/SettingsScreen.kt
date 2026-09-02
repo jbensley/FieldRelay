@@ -76,6 +76,10 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
     var appIdText by remember { mutableStateOf("") }
     var appIdVisible by remember { mutableStateOf(false) }
+    var overlandEndpointText by remember { mutableStateOf("") }
+    var overlandTokenText by remember { mutableStateOf("") }
+    var overlandTokenVisible by remember { mutableStateOf(false) }
+    var overlandDeviceIdText by remember { mutableStateOf("") }
     var aprsCallsignText by remember { mutableStateOf("") }
     var aprsPasscodeText by remember { mutableStateOf("") }
     var aprsPasscodeVisible by remember { mutableStateOf(false) }
@@ -94,6 +98,13 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
     LaunchedEffect(settings.appId) {
         appIdText = ""
         appIdVisible = false
+    }
+
+    LaunchedEffect(settings.overlandEndpoint, settings.overlandToken, settings.overlandDeviceId) {
+        overlandEndpointText = settings.overlandEndpoint
+        overlandTokenText = ""
+        overlandTokenVisible = false
+        overlandDeviceIdText = settings.overlandDeviceId
     }
 
     LaunchedEffect(
@@ -146,6 +157,32 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                 onRemoveAppId = {
                     viewModel.setAppId("")
                     viewModel.setSpotterNetworkEnabled(false)
+                },
+            )
+
+            HorizontalDivider()
+
+            OverlandSettingsSection(
+                settings = settings,
+                endpointText = overlandEndpointText,
+                onEndpointText = { overlandEndpointText = it },
+                tokenText = overlandTokenText,
+                onTokenText = { overlandTokenText = it },
+                tokenVisible = overlandTokenVisible,
+                onToggleTokenVisible = { overlandTokenVisible = !overlandTokenVisible },
+                deviceIdText = overlandDeviceIdText,
+                onDeviceIdText = { overlandDeviceIdText = it },
+                onEnabled = viewModel::setOverlandEnabled,
+                onSave = {
+                    viewModel.setOverlandSettings(
+                        overlandEndpointText,
+                        overlandTokenText.ifBlank { settings.overlandToken },
+                        overlandDeviceIdText,
+                    )
+                },
+                onRemove = {
+                    viewModel.setOverlandSettings("", "", "FieldRelay Android")
+                    viewModel.setOverlandEnabled(false)
                 },
             )
 
@@ -438,6 +475,110 @@ private fun SpotterNetworkSettingsSection(
             }
             if (settings.appId.isNotBlank()) {
                 TextButton(onClick = onRemoveAppId) {
+                    Text("Remove")
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun OverlandSettingsSection(
+    settings: Settings,
+    endpointText: String,
+    onEndpointText: (String) -> Unit,
+    tokenText: String,
+    onTokenText: (String) -> Unit,
+    tokenVisible: Boolean,
+    onToggleTokenVisible: () -> Unit,
+    deviceIdText: String,
+    onDeviceIdText: (String) -> Unit,
+    onEnabled: (Boolean) -> Unit,
+    onSave: () -> Unit,
+    onRemove: () -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("Overland", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = if (settings.overlandEndpoint.isBlank()) {
+                        "No Overland endpoint saved."
+                    } else {
+                        "Overland endpoint saved."
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+            Switch(
+                checked = settings.overlandEnabled,
+                enabled = settings.overlandEndpoint.isNotBlank(),
+                onCheckedChange = onEnabled,
+            )
+        }
+        Text(
+            "Enable Overland to POST beacon locations to a compatible Overland endpoint. A bearer token is optional and depends on your server.",
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        OutlinedTextField(
+            value = endpointText,
+            onValueChange = onEndpointText,
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            label = { Text(if (settings.overlandEndpoint.isBlank()) "Endpoint URL" else "New endpoint URL") },
+        )
+        OutlinedTextField(
+            value = tokenText,
+            onValueChange = onTokenText,
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            label = { Text(if (settings.overlandToken.isBlank()) "Bearer token optional" else "New bearer token") },
+            visualTransformation = if (tokenVisible) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
+            trailingIcon = {
+                IconButton(onClick = onToggleTokenVisible) {
+                    Icon(
+                        imageVector = if (tokenVisible) {
+                            Icons.Default.VisibilityOff
+                        } else {
+                            Icons.Default.Visibility
+                        },
+                        contentDescription = if (tokenVisible) {
+                            "Hide Overland token"
+                        } else {
+                            "Show Overland token"
+                        },
+                    )
+                }
+            },
+        )
+        OutlinedTextField(
+            value = deviceIdText,
+            onValueChange = onDeviceIdText,
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            label = { Text("Device ID") },
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = onSave,
+                enabled = endpointText.trim().isNotBlank() &&
+                    (endpointText.trim() != settings.overlandEndpoint ||
+                        tokenText.trim() != settings.overlandToken ||
+                        deviceIdText.trim() != settings.overlandDeviceId),
+            ) {
+                Text(if (settings.overlandEndpoint.isBlank()) "Save" else "Replace")
+            }
+            if (settings.overlandEndpoint.isNotBlank()) {
+                TextButton(onClick = onRemove) {
                     Text("Remove")
                 }
             }

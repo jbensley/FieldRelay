@@ -27,6 +27,20 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch { ServiceLocator.settings.setSpotterNetworkEnabled(value) }
     }
 
+    fun setOverlandEnabled(value: Boolean) {
+        viewModelScope.launch { ServiceLocator.settings.setOverlandEnabled(value) }
+    }
+
+    fun setOverlandSettings(endpoint: String, token: String, deviceId: String) {
+        viewModelScope.launch {
+            ServiceLocator.settings.setOverlandSettings(
+                endpoint = endpoint.trim(),
+                token = token.trim(),
+                deviceId = deviceId.trim().ifBlank { "FieldRelay Android" },
+            )
+        }
+    }
+
     fun setAprsEnabled(value: Boolean) {
         viewModelScope.launch { ServiceLocator.settings.setAprsEnabled(value) }
     }
